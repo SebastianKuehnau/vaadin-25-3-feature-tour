@@ -2,14 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Project from https://start.vaadin.com/0e271542-7984-45fd-b26b-c8de97300276 -->
-    <groupId>com.example</groupId>
-    <artifactId>app</artifactId>
+    <groupId>com.vaadin.devrel</groupId>
+    <artifactId>vaadin-25-3-feature-tour</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <name>Vaadin 25.3 Feature Tour</name>
+    <description>Live demos of the new features in Vaadin 25.3, built by Vaadin DevRel</description>
     
     <properties>
         <java.version>25</java.version>
         <vaadin.version>25.3.0</vaadin.version>
+        <spring-ai.version>2.0.1</spring-ai.version>
     </properties>
     
     <parent>
@@ -25,6 +28,13 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
                 <version>${vaadin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -46,13 +56,31 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
         </dependency>
+        <!-- AI support: LLM access through Spring AI. Pick the provider with AI_PROVIDER=anthropic|openai -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-anthropic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
+        </dependency>
+        <!-- Observability Kit 5: agent-less, a single dependency (commercial) -->
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>hilla-spring-boot-starter</artifactId>
+            <artifactId>observability-kit-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>

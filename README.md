@@ -1,85 +1,97 @@
-# My Application README
+# Vaadin 25.3 Feature Tour
 
-- [ ] TODO Replace or update this README with instructions relevant to your application
+*A Vaadin DevRel demo app.*
 
-## Project Structure
+A hands-on tour of [Vaadin 25.3](https://vaadin.com/blog/vaadin-25-3-release): every page is a live demo of one
+release feature, with the Java code behind it and a link to the documentation.
 
-This project has the following structure:
+Built with Vaadin Flow 25.3, Spring Boot 4.1 and the Aura theme.
 
-```
-src
-├── main/java
-│   └── [application package]
-│       ├── base
-│       │   └── ui
-│       │       ├── MainLayout.java
-│       │       └── ViewTitle.java
-│       ├── examplefeature
-│       │   ├── ui
-│       │   │   └── TaskListView.java
-│       │   ├── Task.java
-│       │   ├── TaskRepository.java
-│       │   └── TaskService.java                
-│       └── Application.java     
-├── main/resources
-│   ├── META-INF
-│   │   └── resources
-│   │       ├── icons
-│   │       │   └── clipboard-check.svg
-│   │       ├── styles.css
-│   │       └── view-title.css
-│   └── application.properties 
-└── test/java
-    └── [application package]
-        └── examplefeature
-            ├── ui
-            │   └── TaskListViewTest.java
-            └── TaskServiceTest.java                 
-```
+## What's inside
 
-The main entry point into the application is `Application.java`. This class contains the `main()` method that starts up 
-the Spring Boot application.
+| Area | Page | Feature | License |
+|---|---|---|---|
+| New components | Switch | On/off input with helper text, required state, small/reverse/icon variants | Free |
+| | Table | Semantic HTML tables in Java, rows bound to a `ListSignal`, spanning header cells | Free |
+| | Breadcrumbs | Trail built from the route hierarchy (see the app header), or defined manually | Free |
+| Components | Date Picker | Disabled dates and weekdays, `DateMetadataProvider` with CSS parts, default time | Free |
+| | Combo Box | `PartialMatchMode.FIRST_MATCH` / `ONLY_MATCH` | Free |
+| | Message List | Bubble and one-to-one variants, `SELF` items, typing indicator (experimental) | Free |
+| | Upload Validation | `UploadValidator` with metadata, header (magic bytes) and complete phases | Free |
+| | Grid | No data for hidden columns, `GridI18n`, TreeGrid `selectAll()` with descendants | Free |
+| | Accessibility | Keyboard Split Layout, `InputMode`, `HasAriaRole`, `HasAriaDescription`, heading levels | Free |
+| Flow | Validation Groups | Draft vs. publish rules with `BeanValidationBinder` groups | Free |
+| | Size Signal & whenAttached | `Element.sizeSignal()`, `Component.whenAttached()` | Free |
+| | Service Event Bus | Live dashboard of session lock, RPC and data fetch events | Free |
+| AI | AI Form Filler | `FormAIController` with source tracking, confidence and field markers | Commercial, preview |
+| | AI Data Explorer | `GridAIController` and `ChartAIController` over a read-only database | Commercial, preview |
+| | AI Assistant | Request interceptor guardrails, token usage, `ToolException` | Free, preview |
+| Operations | Observability Kit 5 | Agent-less metrics, live `vaadin.*` meters | Commercial |
+| | Under the Hood | TypeScript client engine, Dev Loop CLI, SSE push, Copilot, deprecations | – |
 
-The project follows a *feature-based package structure*, organizing code by *functional units* rather than traditional 
-architectural layers. It includes two feature packages: `base` and `examplefeature`.
+## Running the app
 
-* The `base` package contains classes meant for reuse across different features, either through composition or 
-  inheritance. You can use them as-is, tweak them to your needs, or remove them.
-* The `examplefeature` package is an example feature package that demonstrates the structure. It represents a 
-  *self-contained unit of functionality*, including UI components, business logic, data access, and an integration test.
-  Once you create your own features, *you'll remove this package*.
-
-
-## Starting in Development Mode
-
-To start the application in development mode, import it into your IDE and run the `Application` class. 
-You can also start the application from the command line by running: 
+Requirements: Java 21 or later. Maven and Node.js are handled by the wrapper and the Vaadin plugin.
 
 ```bash
 ./mvnw
 ```
 
-## Building for Production
+Then open http://localhost:8888. Set `PORT` to use a different port.
 
-To build the application in production mode, run:
+Commercial features (AI controllers, Charts, Observability Kit) ask for a Vaadin license in the browser the first
+time you use them. A [free trial](https://vaadin.com/trial) works.
 
-```bash
-./mvnw package
-```
+### AI demos
 
-To build a Docker image, run:
-
-```bash
-docker build -t my-application:latest .
-```
-
-If you use commercial components, pass the license key as a build secret:
+The AI pages talk to an LLM through Spring AI. OpenAI is the default:
 
 ```bash
-docker build --secret id=proKey,src=$HOME/.vaadin/proKey .
+export OPENAI_API_KEY=sk-...
+./mvnw
 ```
 
-## Next Steps
+To use Anthropic instead:
 
-The [Building Apps](https://vaadin.com/docs/v25/building-apps) guides contain hands-on advice for adding features to 
-your application.
+```bash
+export AI_PROVIDER=anthropic
+export ANTHROPIC_API_KEY=sk-ant-...
+./mvnw
+```
+
+The models are set in `application.properties` (`gpt-5.4-mini`, `claude-sonnet-5`). Without a key, the AI pages
+show a hint instead of the live demo. The AI features are a preview and are enabled in
+`src/main/resources/vaadin-featureflags.properties`.
+
+The data explorer runs the SQL written by the LLM as a read-only H2 user. The LLM sees the schema, never the rows.
+
+## Tests
+
+```bash
+./mvnw test
+```
+
+Browserless tests cover the Switch, Table and Binder pages, the upload validator and the AI guardrails, and a smoke
+test opens every page.
+
+## Project structure
+
+```
+src/main/java/com/vaadin/devrel/featuretour
+├── base/ui              MainLayout (side nav + breadcrumbs), ShowcasePage, Tier badges
+└── showcase
+    ├── home             Overview page
+    ├── components       Switch, Table, Breadcrumbs, Date Picker, Combo Box, Message List, Upload, Grid, Accessibility
+    ├── flow             Validation groups, size signal & whenAttached, service event bus
+    ├── ai               Form filler, data explorer, assistant, LLM and database setup
+    └── ops              Observability Kit 5, under the hood
+src/main/resources/META-INF/resources
+├── styles.css           App styles
+└── vaadin-blue-inter.css  Aura theme configuration (Vaadin blue accent, Inter)
+```
+
+## Links
+
+- [Release notes](https://github.com/vaadin/platform/releases/tag/25.3.0)
+- [Release blog post](https://vaadin.com/blog/vaadin-25-3-release)
+- [Vaadin documentation](https://vaadin.com/docs/latest)
